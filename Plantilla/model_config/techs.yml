@@ -1,0 +1,362 @@
+##
+# TECHNOLOGY DEFINITIONS of 
+##
+
+# Note: '-start' and '-end' is used in tutorial documentation only
+
+# Parameters and Units:
+
+    # resource:      limitation over the power output
+    # resource_unit: Defines the unit of numbers provided in resource
+    # energy_eff:    efficiency of power plant             [-]
+    # lifetime:      Life time of the power plant          [year]
+    # energy_cap:    Capital investment of the technology  [$/kW]
+    # om_annual:     Fixed annual O&M cost                 [$/kW]
+    # om_prod:       Variable cost of production           [$/kWh]
+    # om_con:        Variable cost of fuel                 [$/kWh]
+    # energy_cap:    Investment Cost of Technology         [$/kW]
+    # lifetime:      Life time of the Technology           [years]
+    # interest_rate: Interest rate                         [-]
+
+
+
+techs:
+    
+    Pv:
+        essentials:
+            name: 'PV'
+            color: '#F9D956'
+            parent: supply_plus
+            carrier_out: electricity
+        constraints:    
+            resource: file=Pv_eim.csv:pv  # Already accounts for panel efficiency - kWh/m2. Source: Renewables.ninja Solar PV Power - Version: 1.1 - License: https://creativecommons.org/licenses/by-nc/4.0/ - Reference: https://doi.org/10.1016/j.energy.2016.08.060
+            resource_unit: energy_per_cap
+            energy_cap_equals: 320 #KW
+            resource_area_max: 2000 #m2
+            #resource_area_equals: 68650 #m2
+            force_resource: true
+            energy_cap_min: 0
+            lifetime: 25 #https://doi.org/10.3390/en15072640
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 1050 # $/kW https://doi.org/10.3390/en15072640
+                om_prod: -0.023 # $/kW Modell Gallery
+                om_annual: 10.5 # $/kW/year https://doi.org/10.3390/en15072640
+    Pv_jb:
+        essentials:
+            name: 'PV'
+            color: '#F9D956'
+            parent: supply_plus
+            carrier_out: electricity
+        constraints:    
+            resource: file=Pv_jb.csv:pv  # Already accounts for panel efficiency - kWh/m2. Source: Renewables.ninja Solar PV Power - Version: 1.1 - License: https://creativecommons.org/licenses/by-nc/4.0/ - Reference: https://doi.org/10.1016/j.energy.2016.08.060
+            resource_unit: energy_per_cap
+            energy_cap_equals: 50 #KW
+            resource_area_max: 312.5 #m2
+            #resource_area_equals:  #m2
+            force_resource: true
+            energy_cap_min: 0
+            lifetime: 25 #https://doi.org/10.3390/en15072640
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 1050 # $/kW https://doi.org/10.3390/en15072640
+                om_prod: -0.023 # $/kW Modell Gallery
+                om_annual: 10.5 # $/kW/year https://doi.org/10.3390/en15072640
+                
+
+###########################----------------#######################         
+    #WIND Power
+    
+    #ENERCON E82 3000
+
+    #Capacidad instalada: 3000 KW
+    #Altura del tubo: 80 m
+
+
+    wind:
+        essentials:
+            name: 'Wind power'
+            color: '#7500FF'
+            parent: supply_plus
+            carrier_out: Electricity
+        constraints:    
+            resource: file=Wind_canela.csv:wind  # Already accounts for panel efficiency - kWh/m2. Source: Renewables.ninja Solar PV Power - Version: 1.1 - License: https://creativecommons.org/licenses/by-nc/4.0/ - Reference: https://doi.org/10.1016/j.energy.2016.08.060
+            resource_unit: energy_per_cap
+            energy_cap_equals: 1650 #KW
+            force_resource: true
+            energy_cap_min: 0
+            lifetime: 30
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 871 # $/kW Modell Gallery
+                om_prod: -0.04 # $/kW Modell Gallery
+                om_annual: 20 # $/kW/year Modell Gallery                
+                
+                          
+###########################----------------#######################                
+               
+    #Red eléctrica nacional
+    #s_p:
+        #essentials:
+            #name: 'PPA'
+            #color: '#C5ABE3'
+            #parent: supply
+            #carrier: electricity
+        #constraints:
+            #resource: inf
+            #energy_cap_max: 5000
+            #lifetime: 25
+        #costs:
+            #monetary:
+                #interest_rate: 0.10
+                #om_con: 0.126 # $/kWh https://es.globalpetrolprices.com/Chile/electricidad_prices/
+                
+###########################----------------#######################                
+                                                                                                    
+    #ELECTROLIZADOR        
+    elz:
+        essentials:
+            name: 'Electrolyzer'
+            color: '#00EAFF'
+            parent: conversion_plus 
+            carrier_in: electricity 
+            carrier_out: hydrogen
+            carrier_out_2: oxygen
+            primary_carrier_in: electricity
+            primary_carrier_out: hydrogen
+        constraints:
+            carrier_ratios.carrier_out_2.oxygen: 0.5
+            #energy_cap_max: 4000
+            energy_eff: 0.65
+            lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.10
+                energy_cap: 1060 #$/KW https://doi.org/10.1016/J.ENCONMAN.2021.114125
+                om_annual: 37 # $/kW/year 
+
+
+
+###########################----------------####################### 
+
+
+
+
+    #Celda de Combustible        
+    fc:
+        essentials:
+            name: 'Fuel Cell'
+            color: '#00FF3C '
+            parent: conversion_plus          
+            carrier_in: hydrogen
+            carrier_out: electricity 
+            #carrier_out_2: fc_heat
+            primary_carrier_in: hydrogen
+            primary_carrier_out: electricity
+        constraints:
+            #carrier_ratios.carrier_out_2.fc_heat: 0.9 # https://doi.org/10.1016/J.AEJ.2020.02.005
+            export_carrier: electricity
+            energy_eff: 0.5
+            #energy_cap_max: 4000
+            lifetime: 25
+
+        costs:
+            monetary:
+                interest_rate: 0.10
+                energy_cap: 1600
+                om_annual: 80
+
+###########################----------------####################### 
+
+    #INTERCAMBIADOR        
+    #he:
+        #essentials:
+            #name: 'Heat exchanger'
+            #color: '#FF00EF'
+            #parent: conversion           
+            #carrier_in: fc_heat
+            #carrier_out: heat
+        #constraints: 
+            #energy_cap_max: 2000            
+            #energy_eff: 0.7
+            #lifetime: 30
+        #costs:
+            #monetary:
+                #interest_rate: 0.10
+                #energy_cap: 1037.3
+                #om_annual: 36                
+                
+###########################----------------####################### 
+ 
+#Almacenamiento 
+
+    #Storage de electricidad
+    battery:
+        essentials:
+            name: 'bateria'
+            color: '#0072FF'
+            parent: storage
+            carrier: electricity 
+        constraints:
+            #energy_cap_max: 3000  # kW
+            storage_cap_max: inf
+            #parasitic_eff: file=eff.csv:eff
+            energy_cap_per_storage_cap_max: 2
+            energy_eff: 1  # 0.95 * 0.95 = 0.9025 round trip efficiency
+            storage_loss: 0  
+            lifetime: 50 # Brown et al. , Energy, 2018
+        costs:
+            monetary:
+                interest_rate: 0.10
+                storage_cap: 31 # USD per kWh storage capacity
+
+
+###########################----------------####################### 
+ 
+#Almacenamiento 
+
+    #Storage de HIDROGENO
+    h_storage:
+        essentials:
+            name: 'Hydrogen storage'
+            color: '#0072FF'
+            parent: storage
+            carrier: hydrogen
+        constraints:
+            #storage_cap_max: 2000
+            energy_eff: 1  
+            storage_loss: 0  
+            lifetime: 50 # Brown et al. , Energy, 2018
+        costs:
+            monetary:
+                interest_rate: 0.10
+                storage_cap: 15 # USD per kWh storage capacity
+
+
+###########################----------------####################### 
+
+    heat_storage:
+        essentials:
+            name: 'Heat storage'
+            color: '#FF7B00'
+            parent: storage
+            carrier: heat
+        constraints:
+            #energy_cap_max: 3000  # kW
+            storage_cap_max: inf
+            energy_eff: 0.95  
+            storage_loss: 0  # No loss over time assumed
+            lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.10
+                storage_cap: 0.08 # USD per kWh storage capacity            
+  
+###########################----------------#######################   
+  
+ #Demanda 
+  
+    #demanda eléctrica
+    demand_electricity:
+        essentials:
+            name: 'Electricity demand'
+            color: '#072486'
+            parent: demand
+            carrier: electricity
+            
+###########################----------------#######################            
+            
+    #demanda de calor        
+    #demand_heat:
+        #essentials:
+            #name: 'Heat demand'
+            #color: '#FF0008'
+            #parent: demand
+            #carrier: heat  
+
+###########################----------------####################### 
+            
+#Transmisión
+    
+    #tuberías de calor
+    #heat_pipes:
+        #essentials:
+            #name: 'Heat pipes'
+            #color: '#FF0400'
+            #parent: transmission
+            #carrier: heat
+        #constraints:
+            #energy_cap_max: 3500
+            #lifetime: 15
+        #costs:
+            #monetary:
+            
+###########################----------------#######################             
+            
+    #heat_pipes_fc:        
+        #essentials:
+            #name: 'Fc pipes'
+            #color: '#FF0400'
+            #parent: transmission
+            #carrier: fc_heat
+        #constraints:
+            #energy_cap_max: 3000
+            #energy_eff: 1.0
+            #lifetime: 20
+        #costs:
+            #monetary:
+ 
+###########################----------------####################### 
+ 
+    #Tranmisión local sin costo
+    h_pipes:
+        essentials:
+            name: 'Hydrogen pipes'
+            color: '#00A8FF'
+            parent: transmission
+            carrier: hydrogen
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1.0
+            lifetime: 40
+        costs:
+            monetary:                
+ 
+###########################----------------####################### 
+ 
+    #Tranmisión local sin costo
+    t_electricity:
+        essentials:
+            name: 'Electricity transmission'
+            color: '#FFFE00'
+            parent: transmission
+            carrier: electricity
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1.0
+            lifetime: 40
+        costs:
+            monetary:
+ 
+###########################----------------#######################  
+
+            
+    #Tranmisión local de calor sin costo            
+    #t_heat:
+        #essentials:
+            #name: 'Heat transmission'
+            #color: '#FF0C00'
+            #parent: transmission
+            #carrier: heat
+        #constraints:
+            #energy_cap_max: inf
+            #energy_eff: 0.5
+            #lifetime: 30
+        #costs:
+            #monetary:
+           
+    # transmission-end
+

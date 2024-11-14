@@ -1,0 +1,86 @@
+
+##
+# LOCATIONS
+# P1 {lat: -31.2909603, lon: -71.6080976}
+# P2 {lat: -33.0485579, lon: -71.5038501}
+# P3 {lat: -33.041845, lon: -71.470354}
+    #PV_MEC {lat: -33.042352, lon: -71.470745}
+    #ELECTROLIZADOR {lat: -33.041277, lon: -71.471154}
+    #STORAGE {lat: -33.041183, lon: -71.471094}
+    #FUELCELL {lat: -33.041289, lon: -71.470929}
+    
+locations:
+    # P1
+    P1:
+        coordinates: {lat: , lon: }
+        techs:
+            wind:
+            battery:
+            
+    # P2
+    P2:
+        coordinates: {lat: , lon: }
+        techs:
+
+                    
+    #####---------------------------------########       
+    MEC:
+        coordinates: {lat: , lon: }
+        techs:            
+    #         demand_heat:
+    #            constraints:
+    #                resource: file=                  
+                
+                
+    PV:
+        coordinates: {lat: , lon: }
+        techs:
+            :
+            
+    ELECTROLIZADOR:
+        coordinates: {lat: , lon: }
+        techs:
+            elz:
+            
+    STORAGE:
+        coordinates: {lat: , lon: }
+        techs:
+            h_storage:
+        
+    FUELCELL:
+        coordinates: {lat: , lon: }
+        techs:
+            fc:
+        
+    
+    
+##
+# TRANSMISSION CAPACITIES
+##t_electricity
+
+links: 
+    #links-start 
+    PARQUE,MEC:
+        techs:
+            t_electricity:
+    PARQUE,JARDIN:
+        techs:
+            t_electricity:
+    JARDIN,MEC:
+        techs:
+            t_electricity:
+    PV_MEC,MEC:
+        techs:
+            t_electricity:
+    PV_MEC,ELECTROLIZADOR:
+        techs:
+            t_electricity:
+    ELECTROLIZADOR,STORAGE:
+        techs:
+            h_pipes:
+    STORAGE,FUELCELL:
+        techs:
+            h_pipes:
+    FUELCELL,MEC:
+        techs:
+            t_electricity:            
