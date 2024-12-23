@@ -1,0 +1,634 @@
+
+
+techs:
+    # pv:
+    #     essentials:
+    #         name: 'PV'
+    #         color: '#F9D956'
+    #         parent: supply_plus
+    #         carrier_out: electricity
+    #     constraints:    
+    #         resource: file=resource.csv:pv  
+    #         resource_unit: energy_per_cap
+    #         #energy_cap_equals: 25200 #KW
+    #         #force_resource: true
+    #         energy_cap_min: 0
+    #         lifetime: 25 
+    #     costs:
+    #         monetary:
+    #             interest_rate: 0.1
+    #             energy_cap: 1050 # $/kW 
+    #             om_prod: -0.023 # $/kW 
+    #             om_annual: 10.5 # $/kW/year
+
+
+   
+    #--PLANTAS GENERADORAS--#
+    
+                
+    ## PV EN TECHO ##
+    pv_roof:
+        essentials:
+            name: 'pv_roof'
+            color: '#F9D956'
+            parent: supply_plus
+            carrier_out: electricity
+        constraints:    
+            resource: file=resource.csv:pv  
+            resource_unit: energy_per_cap
+            #energy_cap_equals: 5000 #KW
+            energy_cap_max: 125000
+            force_resource: true
+            energy_cap_min: 0
+            lifetime: 25 
+        costs:
+            monetary:
+                 interest_rate: 0.1
+                 energy_cap: 466 # $/kW 
+                 om_annual: 6.92 # $/kW/year 
+
+            co2: 
+                
+
+       
+ 
+    #Altura del tubo: 80 m
+    wind:
+        essentials:
+            name: 'Wind power'
+            color: '#7500FF'
+            parent: supply_plus
+            carrier_out: electricity
+        constraints:    
+            resource: file=resource.csv:wind  
+            resource_unit: energy_per_cap
+            #energy_cap_equals: 20000 #KW
+            energy_cap_max: 500000
+            force_resource: true
+            energy_cap_min: 0
+            lifetime: 30
+        costs:
+            monetary:
+                 interest_rate: 0.1
+                 energy_cap: 1210 # $/kW 
+                 om_annual: 15.1 # $/kW/ye"C:\Users\patri\OneDrive\Escritorio\One drive\Tesis\codigosfinales\Prueba_Oficial_1_OFF_GRID metanoL\model.yml"ar                 
+                
+                          
+                
+    
+    #--SUPPLY--# 
+       
+
+    #Red eléctrica nacional
+    AR_Gener:
+        essentials:
+           name: 'CGEDistribucion'
+           color: '#C5ABE3'
+           parent: supply
+           carrier: electricity
+        constraints:
+           #energy_prod: true
+           #resource: inf
+           energy_cap_max: inf
+           lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.10
+                om_con: 0.118 # $/kWh # https://es.globalpetrolprices.com/electricity_prices/#hl15 & Posible 0.75 segun estudios de empresa 2017               
+
+    
+    #--HIDRÓGENO--#
+    
+
+    #ELECTROLIZADOR        
+    # elz:
+    #     essentials:
+    #         name: 'Electrolyzer'
+    #         color: '#00EAFF'
+    #         parent: conversion_plus 
+    #         carrier_in: electricity 
+    #         carrier_out: hydrogen
+    #         carrier_out_2: oxygen
+    #         primary_carrier_in: electricity
+    #         primary_carrier_out: hydrogen
+    #     constraints:
+    #         carrier_ratios.carrier_out_2.oxygen: 0.5
+    #         #energy_cap_max: 4000
+    #         energy_eff: 0.65
+    #         lifetime: 25
+    #     costs:
+    #         monetary:
+    #             # interest_rate: 0.10
+    #             # energy_cap: 1060 #$/KW
+    #             # om_annual: 37 # $/kW/year 
+
+    ## ELZ CONVERTIDOR ##
+    elz:
+        essentials:
+            name: 'Electrolyzer'
+            color: '#00EAFF'
+            parent: conversion_plus 
+            carrier_in: electricity 
+            carrier_out: kg_hydrogen
+            carrier_out_2: oxygen
+            primary_carrier_in: electricity
+            primary_carrier_out: kg_hydrogen
+        constraints:
+            carrier_ratios.carrier_out_2.oxygen: 0.5
+            #energy_cap_max: 4000
+            energy_eff: 0.0195
+            lifetime: 25
+        costs:
+            monetary:
+                 interest_rate: 0.10
+                 energy_cap: 17998 #$USD/kg
+                 om_annual: 359.964 # $USD/kg/year 
+
+ 
+
+   #Compresor        
+    Compressor:
+        essentials:
+            name: 'Compresor de H2'
+            color: '#FF00EF'
+            parent: conversion           
+            carrier_in: hydrogen
+            carrier_out: kg_hydrogen
+        constraints: 
+            #energy_cap_max: 2000            
+            energy_eff: 0.030003
+            lifetime: 30
+         #costs:
+            # monetary:
+                # interest_rate: 0.10
+                # energy_cap: 1037.3
+                # om_annual: 36    
+
+    # Compressor_co2:
+    #     essentials:
+    #         name: 'Compresor de CO2'
+    #         color: '#7BCFD6'
+    #         parent: conversion
+    #         carrier_in: co2
+    #         carrier_out: kg_co2
+    #     constraints:
+    #         energy_eff: 1
+    #         lifetime: 30
+    #     costs:
+    #         monetary:
+
+
+
+
+    #Celda de Combustible        
+    fc:
+        essentials:
+            name: 'Fuel Cell'
+            color: '#00FF3C '
+            parent: conversion_plus          
+            carrier_in: hydrogen_comp
+            carrier_out: electricity 
+            carrier_out_2: fc_heat
+            primary_carrier_in: hydrogen_comp
+            primary_carrier_out: electricity
+        constraints:
+            carrier_ratios.carrier_out_2.fc_heat: 0.9 
+            export_carrier: electricity
+            energy_eff: 0.5
+            #energy_cap_max: 4000
+            lifetime: 25
+
+        costs:
+            monetary:
+                # interest_rate: 0.10
+                # energy_cap: 1600
+                # om_annual: 80
+
+    #--FIN HIDRÓGENO--#
+
+
+    #CALDERA
+    boiler_m:
+        essentials:
+            name: 'Caldera de metanol'
+            color: '#1720F0'
+            parent: conversion_plus
+            carrier_in: metanol
+            carrier_out: heat
+            carrier_out_2: co2
+            primary_carrier_out: heat
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 0.8
+            carrier_ratios:
+                carrier_out_2.co2: 0.2823
+            lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 2543
+                om_annual: 4.1
+                #om_prod: - ##Costo de la biomasa + ¿Evitar emisiones? 
+                
+
+
+    postcomb:
+        essentials:
+            name: 'Post Combustion CC'
+            color: '#D67132'
+            parent: conversion
+            carrier_in: co2
+            carrier_out: kg_co2
+        constraints:
+            energy_eff: 0.75
+            energy_cap_max: inf
+            lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 0.049
+                om_annual: 0.00147 
+                #om_prod: - ##Emisiones de CO2
+
+
+    
+
+
+
+    #Reactor FT
+    react:
+        essentials:
+            name: 'PtCH3OH'
+            color: '#45F0B1'
+            parent: conversion_plus
+            carrier_in: kg_co2
+            carrier_in_2: kg_hydrogen
+            carrier_out: kg_metanol
+            #carrier_out_2: H20
+            primary_carrier_in: kg_co2
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 0.728
+            carrier_ratios:
+                carrier_in_2.kg_hydrogen: 0.1374
+                #carrier_out_2.H2O: 0.8187 
+            lifetime: 25
+        costs:
+            monetary:
+                interest_rate: 0.1 
+                energy_cap:  300 # USD/kW https://www.mdpi.com/1996-1073/15/7/2640
+                om_annual: 12 # USD/kW 
+
+    ##Direct Air Capture
+    DAC:
+        essentials:
+            name: 'Direct Air Capture'
+            color: '#E0E0BC'
+            parent: conversion
+            carrier_in: electricity
+            carrier_out: kg_co2 #Se trabaja con kg en la transmision
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 0.542 #
+            lifetime: 30
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 0.73
+                om_annual: 0.0438
+
+    supply_co2:
+        essentials:
+            name: 'Suministro de CO2'
+            color: '#F4B383'
+            parent: supply
+            carrier: kg_co2
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+            lifetime: 1
+        costs:
+            monetary:
+                interest_rate: 0
+                om_con: 0.000017
+                #om_annual:
+
+
+    # conv_h2:
+    #     essentials:
+    #         name: 'Conversion a kg'
+    #         color: '#00A8FF'
+    #         parent: conversion
+    #         carrier_in: hydrogen_comp
+    #         carrier_out: kg_hydrogen
+    #     constraints:
+    #         energy_cap_max: inf
+    #         energy_eff: 0.030003
+    #     costs:
+    #         monetary:
+        
+    conv_metanol:
+        essentials:
+            name: 'Conversion a kwh'
+            color: '#45F0B1'
+            parent: conversion
+            carrier_in: kg_metanol
+            carrier_out: metanol
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 5.675
+            lifetime: 1
+        costs:
+            monetary:
+                interest_rate: 0
+                #USD/kgCO2
+                
+
+
+            
+            
+                
+    
+
+
+    #INTERCAMBIADOR        
+#    he:
+#        essentials:
+#            name: 'Heat exchanger'
+            # color: '#FF00EF'
+            # parent: conversion           
+            # carrier_in: fc_heat
+            # carrier_out: heat
+        # constraints: 
+#            energy_cap_max: 2000            
+            # energy_eff: 0.7
+            # lifetime: 30
+        # costs:
+            # monetary:
+                # interest_rate: 0.10
+                # energy_cap: 1037
+                # om_annual: 36                
+                
+
+
+ 
+ 
+#Almacenamiento 
+
+    #Storage de HIDROGENO
+    h_storage:
+        essentials:
+            name: 'Hydrogen storage'
+            color: '#0072FF'
+            parent: storage
+            carrier: kg_hydrogen
+        constraints:
+            #storage_cap_max: 2000
+            energy_eff: 1
+            storage_loss: 0  
+            lifetime: 50 # 
+        costs:
+            monetary:
+                interest_rate: 0.10
+                storage_cap: 1265.612 # Material Complementario High
+                om_annual: 1.2474
+
+
+    #Storage de CO2
+    co2_storage:
+        essentials:
+            name: 'Almacenamiento de CO2'
+            color: '#FEFDD6'
+            parent: storage
+            carrier: kg_co2
+        constraints:
+            energy_eff: 1
+            storage_loss: 0
+            storage_cap_max: inf 
+            #energy_cap_per_storage_cap_max: 4   
+            lifetime: 30
+        costs:
+            monetary:
+                interest_rate: 0.1
+                storage_cap: 1.51 ##Material Complementario
+                om_annual: 0.487
+
+                
+
+    baterias:
+        essentials:
+            name: 'Baterías'
+            color: ''
+            parent: storage
+            carrier: electricity
+        constraints:
+            energy_cap_max: inf 
+            energy_eff: 1
+            lifetime: 15
+            storage_loss: 0
+        costs:
+            monetary:
+                interest_rate: 0.1
+                energy_cap: 250
+                om_annual: 3.9
+
+ 
+# Almacenamiento de hidrogeno en estado de salida del elz
+    # heat_storage:
+        # essentials:
+            # name: 'Heat storage'
+            # color: '#FF7B00'
+            # parent: storage
+            # carrier: heat
+        # constraints:
+            # #energy_cap_max: 3000  # kW
+            # storage_cap_max: inf
+            # energy_eff: 0.95  
+            # storage_loss: 0  
+            # lifetime: 25
+        # costs:
+            # monetary:
+                # interest_rate: 0.10
+                # storage_cap: 0.08           
+  
+   
+  
+ #Demanda 
+  
+    #demanda eléctrica
+    demand_electricity:
+        essentials:
+            name: 'Electricity demand'
+            color: '#072486'
+            parent: demand
+            carrier: electricity
+            
+            
+            
+    #demanda de calor        
+    demand_heat:
+        essentials:
+            name: 'Heat demand'
+            color: '#FF0008'
+            parent: demand
+            carrier: heat  
+
+ 
+            
+#Transmisión
+    
+    #tuberías de calor
+    heat_pipes:
+        essentials:
+            name: 'Heat pipes'
+            color: '#FF0400'
+            parent: transmission
+            carrier: heat
+        constraints:
+            energy_cap_max: inf
+            lifetime: 15
+        costs:
+            monetary:
+            
+             
+            
+    heat_pipes_fc:        
+        essentials:
+            name: 'Fc pipes'
+            color: '#FF0400'
+            parent: transmission
+            carrier: fc_heat
+        constraints:
+            energy_cap_max: 3000
+            energy_eff: 1.0
+            lifetime: 20
+        costs:
+            monetary:
+ 
+ 
+ 
+    #Tranmisión local sin costo
+    h_pipes:
+        essentials:
+            name: 'Hydrogen pipes'
+            color: '#00A8FF'
+            parent: transmission
+            carrier: hydrogen
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1.0
+            lifetime: 40
+        costs:
+            monetary:        
+
+    #Tranmisión local sin costo comprimido
+    h_pipes_comp:
+        essentials:
+            name: 'Hydrogen pipes'
+            color: '#00A8FF'
+            parent: transmission
+            carrier: hydrogen_comp
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1.0
+            lifetime: 40
+        costs:
+            monetary:                  
+ 
+ 
+ 
+    #Tranmisión local sin costo
+    t_electricity:
+        essentials:
+            name: 'Electricity transmission'
+            color: '#FFFE00'
+            parent: transmission
+            carrier: electricity
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1.0
+            lifetime: 40
+        costs:
+            monetary:
+ 
+  
+
+            
+    #Tranmisión local de calor sin costo            
+    t_heat:
+        essentials:
+            name: 'Heat transmission'
+            color: '#FF0C00'
+            parent: transmission
+            carrier: heat
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 0.5
+            lifetime: 30
+            force_asynchronous_prod_con: true
+        costs:
+            monetary:
+           
+
+    #Transmision de efuels#
+    fuel_pipes:
+        essentials:
+            name: 'Líneas de combustible'
+            color: '#A2A6FA'
+            parent: 'transmission'
+            carrier: metanol
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+            lifetime: 30
+        costs:
+            monetary:
+
+    co2_pipes:
+        essentials:
+            name: 'Líneas de CO2'
+            color: '#E083EB'
+            parent: transmission
+            carrier: co2
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+            lifetime: 30
+        costs:
+            monetary:
+
+    kg_co2_pipes:
+        essentials:
+            name: 'kg de CO2'
+            color: '#8F9D9E'
+            parent: transmission
+            carrier: kg_co2
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+        costs:
+            monetary:
+
+    kg_h2_pipes:
+        essentials:
+            name: 'kg de H2'
+            color: '#00A8FF'
+            parent: transmission
+            carrier: kg_hydrogen
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+        costs:
+            monetary:
+        
+    kg_metanol_pipes:
+        essentials:
+            name: 'kg de metanol'
+            color: '#A2A6FA'
+            parent: transmission
+            carrier: kg_metanol
+        constraints:
+            energy_cap_max: inf
+            energy_eff: 1
+        costs:
+            monetary:

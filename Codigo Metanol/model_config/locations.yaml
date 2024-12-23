@@ -1,0 +1,246 @@
+
+# LOCATIONS
+##
+ 
+locations:
+    
+    PARQUE:
+        coordinates: {lat: -36.830325, lon: -73.090788}
+        techs:
+            wind:
+            
+    # PV en Techumbres de planta        
+    PV_roof:
+        coordinates: {lat: -36.835684, lon: -73.095936}
+        techs:
+            pv_roof:
+                
+    #Electrolizador                    
+    ELZ:
+        coordinates: {lat: -36.835117, lon: -73.092774}
+        techs:
+            elz:
+                      
+    #Celda                    
+    # FC:
+    #     coordinates: {lat: -36.836231, lon: -73.095530}
+    #     techs:       
+    #         fc:
+            
+    Storage:
+        coordinates: {lat: -36.835619, lon: -73.092544}
+        techs:       
+            h_storage:            
+            
+           
+    #Empresa PAPELES BIO BIO - UNIPAPEL
+    Papelera:
+        coordinates: {lat: -36.8354279, lon: -73.096252}
+        techs:
+            #pv:  - DESACTIVADO
+            # demand_electricity:            
+            #     constraints:                   
+            #         resource: file=demand.csv:electricity
+            demand_heat:            
+               constraints:                   
+                    resource: file=demand-3a.csv:heat  
+    #Intercambiador de calor                
+#    HE:
+#        coordinates: {lat: -36.833848, lon: -73.096481}
+#        techs:
+#            he:
+#            heat_storage:
+
+## Combustibles Sintéticos ##
+
+    Caldera:
+        coordinates: {lat: -36.83508266480278, lon: -73.09662820816129}
+        techs:
+            boiler_m:
+
+    Post_comb:
+        coordinates: {lat: -36.83522852846046, lon: -73.09697946273432}
+        techs:  
+            postcomb:
+
+    
+    Reactor_FT:
+        coordinates: {lat: -36.83723632915458, lon: -73.09678148684718}
+        techs:
+            react:
+
+    Storage_co2:
+        coordinates: {lat: -36.83757699052703, lon: -73.09740882477152}
+        techs:
+            co2_storage:
+    
+    DAC:
+        coordinates: {lat: -36.83703868527141, lon: -73.09556377283585}
+        techs:
+            DAC:
+
+    # Conv_h2:
+    #     coordinates: {lat: -36.83706071575651,lon: -73.09655632209497}
+    #     techs:
+    #         conv_h2:
+
+    Conv_m:
+        coordinates: {lat: -36.83694716472847, lon: -73.09719871557583 }
+        techs:
+            conv_metanol:
+
+
+    # Supply_co2:
+    #     coordinates: {lat: -36.838327645920245, lon: -73.09678545818991}
+    #     techs:
+    #         supply_co2:
+
+
+
+    #Compresor 
+    # COMPRESOR:
+    #     coordinates: {lat: -36.835307, lon: -73.092453}
+    #     techs:
+    #         Compressor:
+            
+    #Sub estacion electrica               
+    Sub_Estacion:
+        coordinates: {lat: -36.833850, lon: -73.096485}
+        techs:
+            baterias:
+   
+##
+# TRANSMISSION CAPACITIES
+##
+
+links:
+    # links-start
+    ## CONEXIONES ELECTRICAS ##
+
+    ELZ,Sub_Estacion:
+        techs:
+            t_electricity:
+
+    PARQUE,ELZ:
+        techs:
+            t_electricity:
+    
+    PV_roof,ELZ:
+        techs:
+            t_electricity:
+
+    Sub_Estacion,DAC:
+        techs:
+            t_electricity:
+
+    PV_roof,DAC:
+        techs:
+            t_electricity:
+
+    PARQUE,DAC:
+        techs:
+            t_electricity:
+
+    FC,DAC:
+        techs:
+            t_electricity:
+
+    FC,ELZ:
+        techs:
+            t_electricity:
+
+    ## Conexiones H2 ##
+
+    ELZ,Storage:
+        techs:
+            kg_h2_pipes:
+    
+    Storage,FC: 
+        techs:
+            kg_h2_pipes:
+
+    ELZ,Reactor_FT:
+        techs:
+            kg_h2_pipes:
+
+    COMPRESOR,Storage:
+        techs:
+            kg_h2_pipes:
+
+    Storage,Reactor_FT:
+        techs:
+            kg_h2_pipes:
+
+    ## Conexiones CO2 ##
+
+    # DAC,Storage_co2:
+    #     techs:
+    #         co2_pipes:
+
+    Caldera,Post_comb:
+        techs:
+            co2_pipes:
+
+    Post_comb,Storage_co2:
+        techs:
+            kg_co2_pipes:
+
+    # Storage_co2:
+    #     techs:
+    #         co2_pipes:
+
+    Supply_co2,Storage_co2:
+        techs:
+            kg_co2_pipes:
+
+    Supply_co2,Reactor_FT:
+        techs:
+            kg_co2_pipes:
+
+    ## Conexiones Metano ##
+
+    # Reactor_FT,Caldera:
+    #     techs:
+    #         fuel_pipes:
+
+    ## Entrega de Vapor ##
+
+    Caldera,Papelera:
+        techs:
+            heat_pipes:
+
+    
+    ## CICLO DE CONVERSION ##
+
+    Storage,Conv_h2:
+        techs:
+            h_pipes_comp:
+
+    Conv_h2,Reactor_FT:
+        techs:
+            kg_h2_pipes:
+
+    Storage_co2,Reactor_FT:
+        techs:
+            kg_co2_pipes:
+            
+    Reactor_FT,Conv_m:
+        techs:
+            kg_metanol_pipes:
+
+    DAC,Storage_co2:
+        techs:
+            kg_co2_pipes:
+
+    Conv_m,Caldera:
+        techs:
+            fuel_pipes:
+
+
+    
+
+
+            
+
+    # links-end
+
