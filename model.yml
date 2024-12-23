@@ -1,0 +1,31 @@
+import:  # Import other files from paths relative to this file, or absolute paths
+    - 'model_config/locations.yaml'  # This file specifies the model's locations
+    - 'model_config/techs.yaml'  # This file specifies the model's technologies
+    
+
+    
+# Model configuration: all settings that affect the built model
+model:
+    name:  E7.3a_OFF_METANOLPARCIAL_P+D
+    
+    calliope_version: 0.6.8
+    
+    timeseries_data_path: 'timeseries_data'
+    
+    subset_time: ['2016-01-01','2016-12-31']
+   
+
+run:
+    solver: gurobi
+    
+    ensure_feasibility: True # Switches on the "unmet demand" constraint
+
+    #bigM: 1e6
+    bigM: 1e6  # Sets the scale of unmet demand, which cannot be too high, otherwise the optimisation will not converge
+
+    zero_threshold: 1e-10  # Any value coming out of the backend that is smaller than this (due to floating point errors, probably) will be set to zero
+
+    mode: plan  # Choices: plan, operate
+
+    objective_options.cost_class: {monetary: 1}
+ 
